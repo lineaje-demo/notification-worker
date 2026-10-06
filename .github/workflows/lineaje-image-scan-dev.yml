@@ -31,7 +31,7 @@ jobs:
           scan_type: image
           image: notification-worker:latest
           metafiles: Dockerfile
-          lineaje_cli_token: ${{ secrets.LINEAJE_CLI_TOKEN }}
+          lineaje_cli_token: ${{ secrets.LINEAJE_CLI_TOKEN_DEV }}
           project_name: "notification-worker"
           project_version: ${{ github.event.inputs.version }}
           org_name: "Root Organization"
