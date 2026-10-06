@@ -21,7 +21,7 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
 
       # 1. Build the original image
-      - run: docker build -t acme-base-image:latest .
+      - run: docker build -t notification-worker:latest .
 
       # 2. Scan + fix plan → uploads patched Dockerfile artifact
       - name: Lineaje scan + fix plan
@@ -29,13 +29,20 @@ jobs:
         uses: lineaje-actions/lineaje-actions@v1
         with:
           scan_type: image
-          image: acme-base-image:latest
+          image: notification-worker:latest
           metafiles: Dockerfile
           lineaje_cli_token: ${{ secrets.LINEAJE_CLI_TOKEN }}
-          project_name: "acme-base-image"
+          project_name: "notification-worker"
           project_version: ${{ github.event.inputs.version }}
           org_name: "Root Organization"
           post_scan: fix_plan
+          identity_url: https://lineaje-identity-service.commercialdev.dev.veedna.com
+          gpt_service_url: https://lineaje-gpt-service.commercialdev.dev.veedna.com
+          scim_url: https://scim-service.commercialdev.dev.veedna.com
+          scm_url: https://scm-service.commercialdev.dev.veedna.com
+          notification_url: https://notification-service.commercialdev.dev.veedna.com
+          data_service_url: https://data-service-v2-apigw.commercialdev.dev.veedna.com
+
 
       # 3. Rebuild only when curated fixes exist (already available as-is).
       #    Skip when premium_only=true — those fixes must be requested from
@@ -45,7 +52,7 @@ jobs:
         run: |
           docker build \
             -f ${{ steps.scan.outputs.patched_dockerfile }} \
-            -t acme-base-image:latest-patched \
+            -t notification-worker:latest-patched \
             .
 
       # 4. Rescan the patched image to confirm fixes
