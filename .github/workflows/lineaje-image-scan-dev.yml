@@ -1,4 +1,4 @@
-name: Lineaje Image Scan
+name: Lineaje Image Scan Dev
 
 on:
   workflow_dispatch:
